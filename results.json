@@ -1,0 +1,32 @@
+{
+  "question": "Can a greedy-seeded swap local search with incremental coverage evaluation place k monitors to cover more network links than a plain randomized-restart metaheuristic under the same tight wall-clock budgets on real public network topologies?",
+  "method": "Oregon-1 AS graph cut into 5 connected ~400-node BFS subnetworks; k=10 monitors; objective = fraction of links in the union of (fixed BFS-tree) shortest paths between monitor pairs; budgets [0.2, 1.0, 5.0] s, seeds [42, 43, 44].",
+  "dataset": {
+    "name": "SNAP Oregon-1 (oregon1_010331), 5 BFS subnetworks",
+    "source_url": "https://snap.stanford.edu/data/oregon1_010331.txt.gz",
+    "n_rows": 22002,
+    "n_train": 0,
+    "n_test": 5,
+    "same_as_paper": false
+  },
+  "metric_name": "mean fraction of links covered (over instances, seeds, budgets)",
+  "higher_is_better": true,
+  "baseline": "Random restarts + first-improvement swap local search with full re-evaluation of the union of pair paths.",
+  "improved": "Greedy marginal-gain construction, best-swap local search with cached path-edge bitsets and incremental evaluation, then perturbation restarts until the budget ends.",
+  "metrics": {
+    "baseline_score": 0.04834760333333847,
+    "baseline_frac_at_0.2s": 0.04723385204274833,
+    "baseline_frac_at_1.0s": 0.048552859720143796,
+    "baseline_frac_at_5.0s": 0.04925609823712331,
+    "baseline_time_to_95pct_s": 0.3062906024666698,
+    "baseline_reached_95pct_frac": 1.0,
+    "improved_score": 0.04912594818097021,
+    "improved_frac_at_0.2s": 0.048581457324424884,
+    "improved_frac_at_1.0s": 0.049292690236332135,
+    "improved_frac_at_5.0s": 0.049503696982153664,
+    "improved_time_to_95pct_s": 0.08364007033333347,
+    "improved_reached_95pct_frac": 1.0,
+    "improvement": 0.0007783448476317359
+  },
+  "notes": "No training/tuning: all 5 subnetworks are held-out test instances (n_rows = edges of the cleaned full graph; n_test = instances), so no train/test split applies and no settings were tuned. Baseline is a re-implementation (paper algorithm not available). All-pairs path precomputation is shared and excluded from budgets. Best-at-budget values are read from one 5 s anytime trajectory per seed. Time-to-95% uses the best value over all runs of both methods as reference, censored at 5 s. Subnetworks from BFS around AS hubs are small, hub-dominated and may overlap in structure. Wall-clock results depend on the runner CPU. Only 3 seeds and 5 instances."
+}
